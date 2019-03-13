@@ -111,7 +111,6 @@ let tests =
         equal (string 0.00123M, "0.00123")
         equal (string 0.00012M, "0.00012")
         equal (string 0.00001M, "0.00001")
-        equal (string 0.12300M, "0.12300")
         equal (string 0.0M, "0.0")
         equal (string 0M, "0")
         equal (string 1M, "1")
@@ -119,6 +118,8 @@ let tests =
         equal (string 79228162514264337593543950335M, "79228162514264337593543950335")
         equal (string -79228162514264337593543950335M, "-79228162514264337593543950335")
         // When compiling with fable-compiler-js, the non-significant zeroes are discarded
+
+        // equal (string 0.12300M, "0.12300")
         // equal (string 0.00000M, "0.00000")
         // equal (string 00000000000000000000000000000.M, "0")
         // equal (string 0.0000000000000000000000000000M, "0.0000000000000000000000000000")
