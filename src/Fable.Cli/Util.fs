@@ -2,7 +2,7 @@ namespace Fable.Cli
 
 module Literals =
 
-  let [<Literal>] VERSION = "2.2.0-beta-016"
+  let [<Literal>] VERSION = "2.2.0-beta-017"
   let [<Literal>] CORE_VERSION = "2.1.0"
   let [<Literal>] DEFAULT_PORT = 61225
   let [<Literal>] FORCE = "force:"
@@ -116,16 +116,18 @@ type GlobalParams private (verbose, forcePkgs, fableLibraryPath, workingDir) =
 
 [<RequireQualifiedAccess>]
 module Log =
-  open System
+    open System
 
-  let logVerbose(msg: Lazy<string>) =
-    if GlobalParams.Singleton.Verbose then
-      try // Some long verbose message may conflict with other processes
-        Console.WriteLine(msg.Value)
-      with _ -> ()
+    let writerLock = obj()
 
-  let logAlways(msg: string) =
-    Console.WriteLine(msg)
+    let always (msg: string) =
+        lock writerLock (fun () ->
+            Console.Out.WriteLine(msg)
+            Console.Out.Flush())
+
+    let verbose (msg: Lazy<string>) =
+        if GlobalParams.Singleton.Verbose then
+            always msg.Value
 
 module Json =
     open FSharp.Reflection
@@ -193,8 +195,6 @@ module Process =
             if isWindows
             then "cmd", ("/C \"" + fileName + "\" " + args)
             else fileName, args
-        printfn "CWD: %s" workingDir
-        printfn "%s %s" fileName args
         let p = new Process()
         p.StartInfo.FileName <- fileName
         p.StartInfo.Arguments <- args
@@ -240,7 +240,7 @@ module Process =
 
         exitCode, logOut.ToArray(), logErr.ToArray()
 
-    // Adapted from https://github.com/enricosada/dotnet-proj-info/blob/1e6d0521f7f333df7eff3148465f7df6191e0201/src/dotnet-proj/Program.fs#L155
+   // Adapted from https://github.com/enricosada/dotnet-proj-info/blob/1e6d0521f7f333df7eff3148465f7df6191e0201/src/dotnet-proj/Program.fs#L155
     let runCmd log errorLog workingDir exePath args =
         log (workingDir + "> " + exePath + " " + (args |> String.concat " "))
 
@@ -329,8 +329,6 @@ module Async =
     }
 
 module File =
-    open System.IO
-
     /// File.ReadAllText fails with locked files. See https://stackoverflow.com/a/1389172
     let readAllTextNonBlocking (path: string) =
         use fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
