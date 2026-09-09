@@ -1,5 +1,5 @@
 ---
-last_commit_released: c49d1ec5d1a491bfff65fe4bd6c71014cac9b321
+last_commit_released: fbc162d6912d62b9a75e73f8264814f6519b6194
 include:
   - ../fable-library-beam/
   - ../fable-library-dart/
@@ -27,6 +27,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## 5.17.1 - 2026-09-09
+
+### 🐞 Bug Fixes
+
+* *(python)* Preserve record field names in structured formatting (#4952) ([fbc162d6](https://github.com/nojaf/Fable/commit/fbc162d6912d62b9a75e73f8264814f6519b6194))
+
+<strong><small>[View changes on Github](https://github.com/nojaf/Fable/compare/c49d1ec5d1a491bfff65fe4bd6c71014cac9b321..fbc162d6912d62b9a75e73f8264814f6519b6194)</small></strong>
 
 ## 5.17.0 - 2026-09-08
 
